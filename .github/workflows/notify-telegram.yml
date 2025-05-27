@@ -1,0 +1,29 @@
+name: telegram notifications
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram Message
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.WEBOPS_BOT_TG_TOKEN }}
+          CHAT_ID: "-4963784825"
+          TOPIC_ID: "2"
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_STATE="${{ github.event.pull_request.state }}"
+          PR_USER="${{ github.event.pull_request.user.login }}"
+
+          MESSAGE="🔔 *PR ${PR_STATE^}*\n[$PR_TITLE]($PR_URL) by *$PR_USER*"
+
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="$CHAT_ID" \
+            -d message_thread_id="$TOPIC_ID" \
+            -d text="$MESSAGE" \
+            -d parse_mode="Markdown"
+
