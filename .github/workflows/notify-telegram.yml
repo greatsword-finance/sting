@@ -19,7 +19,7 @@ jobs:
           PR_STATE="${{ github.event.pull_request.state }}"
           PR_USER="${{ github.event.pull_request.user.login }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          REPO_NAME="${{ github.repository }}"
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
 
           MESSAGE=$(printf '*%s PR %s %s*\n[%s](%s)\nby *%s*' "$REPO_NAME" "$PR_NUMBER" "${PR_STATE^}" "$PR_TITLE" "$PR_URL" "$PR_USER")
 
