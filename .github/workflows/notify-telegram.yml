@@ -19,8 +19,9 @@ jobs:
           PR_STATE="${{ github.event.pull_request.state }}"
           PR_USER="${{ github.event.pull_request.user.login }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO_NAME="${{ github.repository }}"
 
-          MESSAGE=$(printf '*PR %s %s*\n[%s](%s)\nby *%s*' "$PR_NUMBER" "${PR_STATE^}" "$PR_TITLE" "$PR_URL" "$PR_USER")
+          MESSAGE=$(printf '*%s PR %s %s*\n[%s](%s)\nby *%s*' "$REPO_NAME" "$PR_NUMBER" "${PR_STATE^}" "$PR_TITLE" "$PR_URL" "$PR_USER")
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${CHAT_ID}" \
